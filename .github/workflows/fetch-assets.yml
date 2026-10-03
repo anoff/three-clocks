@@ -1,0 +1,32 @@
+name: Fetch image candidates
+
+# Downloads image candidates from Wikimedia Commons (with license and author) and map data,
+# then pushes them to the `asset-candidates` branch for review. Selected images are
+# processed and committed to master by hand.
+on:
+  workflow_dispatch:
+    inputs:
+      ids:
+        description: "Optional comma-separated scene ids (e.g. 1027-jp,1521-de); empty = all"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Download candidates
+        run: node tools/fetch-assets.mjs out "${{ github.event.inputs.ids }}"
+      - name: Push to asset-candidates branch
+        run: |
+          cd out
+          git init -q -b asset-candidates
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "Image candidates and map data (run ${{ github.run_id }})"
+          git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" asset-candidates
