@@ -127,8 +127,8 @@ body {
 .card { position: relative; z-index: 1; }
 
 /* media panel: a painting/photo, a map or a chart, fading into the lane on its left edge */
-.media { position: absolute; top: 0; right: 0; bottom: 0; width: 42%; overflow: hidden; opacity: 0; pointer-events: none; background: #0d1520;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 26%); mask-image: linear-gradient(90deg, transparent 0, #000 26%); }
+.media { position: absolute; top: 0; right: 0; bottom: 0; width: var(--mw, 42%); overflow: hidden; opacity: 0; pointer-events: none; background: #0d1520;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade, 26%)); mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade, 26%)); }
 .media:empty { display: none; }
 .media .kb { position: absolute; inset: 0; overflow: hidden; }
 .media img { width: 100%; height: 100%; object-fit: cover; display: block; will-change: transform; }
@@ -142,7 +142,7 @@ body {
 .media .pulse { transform-box: fill-box; transform-origin: center; animation: pulse 1.6s ease-out infinite; }
 @keyframes pulse { from { transform: scale(1); opacity: .9; } to { transform: scale(2.6); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .media .pulse { animation: none; opacity: 0; } }
-.slot.has-media { padding-right: calc(42% - 34px); }
+.slot.has-media { padding-right: calc(var(--mw, 42%) - 34px); }
 .slot.has-media .ill { display: none; }
 .slot.has-media .card { gap: 18px; }
 .slot.has-media .tag { width: 112px; }
@@ -264,6 +264,15 @@ html:lang(ja) .mark small, html:lang(ja) .labels span { letter-spacing: .04em; }
 .stage.portrait .slot.has-media .tag { width: auto; }
 .stage.portrait .slot.has-media .txt h3 { font-size: 34px; }
 .stage.portrait .slot.has-media .txt p { font-size: 25px; color: rgba(255, 255, 255, .87); }
+/* phone, portrait-format image (a person): a framed column on the right instead of a darkened background */
+.stage.portrait .slot.side { padding: 10px calc(var(--sw) - 8px) 12px 20px; align-items: center; }
+.stage.portrait .slot.side .media { left: auto; width: var(--sw);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 20%); mask-image: linear-gradient(90deg, transparent 0, #000 20%); }
+.stage.portrait .slot.side .media::after { content: none; }
+.stage.portrait .slot.side .media .credit { top: auto; bottom: 6px; font-size: 10.5px; max-width: 80%; }
+.stage.portrait .slot.side .card { color: inherit; }
+.stage.portrait .slot.side .txt h3 { font-size: 31px; }
+.stage.portrait .slot.side .txt p { font-size: 22px; line-height: 1.28; color: color-mix(in oklab, var(--ink) 76%, var(--surf)); }
 .stage.portrait .credits-card { padding: 44px 40px; }
 .stage.portrait .cr-list { grid-template-columns: minmax(0, 1fr); font-size: 18px; }
 .stage.portrait .ill { right: 48px; top: auto; bottom: 2px; margin: 0; width: 160px; height: 133px; }
@@ -719,7 +728,7 @@ const Sound = (() => {
   const cards = {};
   REGIONS.forEach(r => {
     const c = $('card-' + r);
-    cards[r] = { el: c, tag: c.querySelector('.tag'), h: c.querySelector('h3'), p: c.querySelector('p'), ill: $('ill-' + r), slot: c.parentNode, art: false, media: $('media-' + r), mkind: null, kbImg: null, mfocus: null, svg: null };
+    cards[r] = { el: c, tag: c.querySelector('.tag'), h: c.querySelector('h3'), p: c.querySelector('p'), ill: $('ill-' + r), slot: c.parentNode, art: false, media: $('media-' + r), mkind: null, kbImg: null, svg: null };
   });
   const caption = $('caption'), range = $('range'), stamp = $('stamp');
   const linkPath = $('linkPath'), linkShade = $('linkShade'), linkDots = $('linkDots');
@@ -764,13 +773,23 @@ const Sound = (() => {
   }
   function setMedia(r, k) {
     const c = cards[r], spec = k >= 0 ? mediaSpec(k, r) : null, box = c.media;
-    c.mkind = null; c.kbImg = null; c.mfocus = null; c.svg = null;
-    if (!spec) { box.innerHTML = ''; c.slot.classList.remove('has-media'); return; }
+    c.mkind = null; c.kbImg = null; c.svg = null;
+    c.slot.classList.remove('side');
+    if (!spec) { box.innerHTML = ''; c.slot.classList.remove('has-media'); c.slot.style.removeProperty('--mw'); return; }
     const id = `${SCENES[k].year}-${r}`;
     if (spec === 'img') {
-      const m = MEDIA[id], [fx, fy] = m.focus;
-      box.innerHTML = `<div class="kb"><img alt="" decoding="async" src="img/${id}.jpg" style="object-position:${fx}% ${fy}%;transform-origin:${fx}% ${fy}%"></div><div class="credit">${esc(creditLine(m))}</div>`;
-      c.kbImg = box.querySelector('img'); c.mfocus = m.focus; c.mkind = 'img';
+      const m = MEDIA[id];
+      // portrait-format images (mostly people) get a narrower panel so the crop is head-and-shoulders,
+      // and on phones a framed column beside the text instead of a darkened background
+      const narrow = m.w / m.h < 1.15;
+      c.slot.style.setProperty('--mw', narrow ? '30%' : '42%');
+      c.slot.style.setProperty('--fade', narrow ? '18%' : '26%');
+      c.slot.style.setProperty('--sw', m.w / m.h < .9 ? '36%' : '40%');
+      c.slot.classList.toggle('side', narrow);
+      box.innerHTML = `<div class="kb"><img alt="" decoding="async" src="img/${id}.jpg"></div><div class="credit">${esc(creditLine(m))}</div>`;
+      c.kbImg = box.querySelector('img'); c.mkind = 'img';
+      c.slot.classList.add('has-media');
+      cropTo(c.kbImg, box, m);
       c.kbImg.addEventListener('error', () => { if (c.kbImg && c.kbImg.getAttribute('src') === `img/${id}.jpg`) { box.innerHTML = ''; c.slot.classList.remove('has-media'); c.mkind = null; c.kbImg = null; } }, { once: true });
     } else if (spec.startsWith('map:')) {
       box.innerHTML = mapSVG(spec.slice(4), r) + `<div class="credit">${esc(L.ui.media.map)}</div>`; c.mkind = 'svg';
@@ -781,6 +800,21 @@ const Sound = (() => {
     c.svg = box.querySelector('svg');
     if (c.svg) c.svg.querySelectorAll('.draw').forEach(el => el.setAttribute('pathLength', '1'));
     c.slot.classList.toggle('has-media', !!c.mkind);
+    if (spec !== 'img') { c.slot.style.removeProperty('--mw'); c.slot.style.removeProperty('--fade'); }
+  }
+  // object-fit: cover shows a band of the image; place that band so the subject centre (m.focus) lands at a target spot
+  // in the panel, then zoom into the subject. Landscape: middle of the panel. Phone: upper third, above the text overlay.
+  function cropTo(img, box, m) {
+    const bw = box.offsetWidth || 1, bh = box.offsetHeight || 1, ia = m.w / m.h, ba = bw / bh;
+    const fx = ia > ba ? ba / ia : 1, fy = ia < ba ? ia / ba : 1;      // visible fraction of the image width / height
+    const [cx, cy] = m.focus.map(v => v / 100);
+    const phone = stage.classList.contains('portrait'), side = box.parentNode.classList.contains('side');
+    const ty = !phone ? .5 : side ? .42 : .22;
+    const pos = (c, f, t) => f >= .999 ? .5 : clamp((c - t * f) / (1 - f));
+    const px = pos(cx, fx, .5), py = pos(cy, fy, ty);
+    const ox = fx >= .999 ? cx : (cx - px * (1 - fx)) / fx, oy = fy >= .999 ? cy : (cy - py * (1 - fy)) / fy;  // subject in panel coords
+    img.style.objectPosition = `${(px * 100).toFixed(1)}% ${(py * 100).toFixed(1)}%`;
+    img.style.transformOrigin = `${(clamp(ox) * 100).toFixed(1)}% ${(clamp(oy) * 100).toFixed(1)}%`;
   }
   const HL_COLOR = { '392': 'var(--jp)', '840': 'var(--us)', '276': 'var(--de)' };
   function mapSVG(name, r) {
@@ -954,10 +988,7 @@ const Sound = (() => {
       const [o, x, draw = 0, fill = 0, mdraw = 0, mfill = 0, kb = 0] = lane[r], c = cards[r];
       if (c.mkind) {
         c.media.style.opacity = o.toFixed(3);
-        if (c.kbImg) {
-          const [fx, fy] = c.mfocus;
-          c.kbImg.style.transform = `translate(${((50 - fx) * .06 * kb).toFixed(2)}%, ${((50 - fy) * .06 * kb).toFixed(2)}%) scale(${(1.04 + .1 * kb).toFixed(4)})`;
-        } else if (c.svg) { c.svg.style.setProperty('--draw', (1 - mdraw).toFixed(3)); c.svg.style.setProperty('--fill', mfill.toFixed(3)); }
+        if (c.kbImg) c.kbImg.style.transform = `scale(${(1.03 + .09 * kb).toFixed(4)})`; else if (c.svg) { c.svg.style.setProperty('--draw', (1 - mdraw).toFixed(3)); c.svg.style.setProperty('--fill', mfill.toFixed(3)); }
       } else c.media.style.opacity = 0;
       c.el.style.opacity = o.toFixed(3);
       c.el.style.transform = `translateX(${x.toFixed(1)}px)`;

@@ -1,6 +1,6 @@
 """Turns the chosen Commons candidates into web images + credits.
 Usage: python3 tools/process-images.py <round1-dir> [<round2-dir>]
-Writes assets/img/<id>.jpg (max 800x600, progressive JPEG) and src/media.js (credits + focus points)."""
+Writes assets/img/<id>.jpg (max 800x600, progressive JPEG) and src/media.js (credits + subject centre)."""
 import json, sys, re, os
 from PIL import Image
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
