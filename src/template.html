@@ -117,6 +117,14 @@ body {
 .txt { min-width: 0; }
 .txt h3 { margin: 0; font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -.016em; text-wrap: balance; }
 .txt p { margin: 5px 0 0; max-width: 64ch; font-size: 20px; line-height: 1.32; color: color-mix(in oklab, var(--ink) 76%, var(--surf)); text-wrap: pretty; }
+.ill { position: absolute; right: 86px; top: 50%; width: 136px; height: 113px; margin-top: -57px; opacity: 0; overflow: visible; pointer-events: none;
+  color: color-mix(in oklab, var(--c) 80%, var(--ink)); fill: none; stroke: currentColor; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.ill :is(path, circle, rect, ellipse, line, polyline, polygon) { stroke-dasharray: 1 1; stroke-dashoffset: var(--draw, 0); }
+.ill .f, .ill .f * { fill: currentColor; fill-opacity: calc(.2 * var(--fill, 1)); stroke: none; }
+.ill .s { fill: currentColor; stroke: none; opacity: var(--fill, 1); }
+.ill.drawing * { stroke-linecap: butt; } /* round caps leave dots on half-drawn dashes */
+.slot.has-ill { padding-right: 236px; }
+.card { position: relative; z-index: 1; }
 .link { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .link path { fill: none; stroke: currentColor; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
 .link circle { fill: currentColor; }
@@ -206,7 +214,8 @@ html:lang(ja) .mark small, html:lang(ja) .labels span { letter-spacing: .04em; }
 .stage.portrait .era { align-self: center; font-size: 15px; }
 .stage.portrait .era .es { display: inline; }
 .stage.portrait .era .es::before { content: " · "; }
-.stage.portrait .slot { padding: 10px 62px 12px 20px; }
+.stage.portrait .slot, .stage.portrait .slot.has-ill { padding: 10px 62px 12px 20px; }
+.stage.portrait .ill { right: 48px; top: auto; bottom: 2px; margin: 0; width: 160px; height: 133px; }
 .stage.portrait .card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 16px; row-gap: 8px; }
 .stage.portrait .txt { display: contents; }
 .stage.portrait .tag { width: auto; min-width: 104px; max-width: 150px; font-size: 16px; }
@@ -276,21 +285,21 @@ html:lang(ja) .stage.portrait .end-card h2 { font-size: 84px; }
               <div class="mark jp"><span class="kanji" lang="ja">日本</span><span class="latin" id="sub-jp"></span></div>
               <div class="era" id="era-jp"></div>
             </div>
-            <div class="slot"><div class="card" id="card-jp"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
+            <div class="slot"><svg class="ill" id="ill-jp" viewBox="0 0 120 100" aria-hidden="true"></svg><div class="card" id="card-jp"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
           </section>
           <section class="lane" data-r="us">
             <div class="name">
               <div class="mark us"><span class="wm" lang="en">America</span><small id="sub-us"></small></div>
               <div class="era" id="era-us"></div>
             </div>
-            <div class="slot"><div class="card" id="card-us"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
+            <div class="slot"><svg class="ill" id="ill-us" viewBox="0 0 120 100" aria-hidden="true"></svg><div class="card" id="card-us"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
           </section>
           <section class="lane" data-r="de">
             <div class="name">
               <div class="mark de"><span class="wm" lang="de">Deutschland</span><small id="sub-de"></small></div>
               <div class="era" id="era-de"></div>
             </div>
-            <div class="slot"><div class="card" id="card-de"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
+            <div class="slot"><svg class="ill" id="ill-de" viewBox="0 0 120 100" aria-hidden="true"></svg><div class="card" id="card-de"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
           </section>
           <svg class="link" id="link" aria-hidden="true"><path id="linkPath" d=""></path><g id="linkDots"></g></svg>
         </div>
@@ -646,7 +655,7 @@ const Sound = (() => {
   const cards = {};
   REGIONS.forEach(r => {
     const c = $('card-' + r);
-    cards[r] = { el: c, tag: c.querySelector('.tag'), h: c.querySelector('h3'), p: c.querySelector('p') };
+    cards[r] = { el: c, tag: c.querySelector('.tag'), h: c.querySelector('h3'), p: c.querySelector('p'), ill: $('ill-' + r), slot: c.parentNode, art: false };
   });
   const caption = $('caption'), range = $('range'), stamp = $('stamp');
   const linkPath = $('linkPath'), linkDots = $('linkDots');
@@ -655,7 +664,7 @@ const Sound = (() => {
   function setContent(ci) {
     curContent = ci;
     if (ci < 0) {
-      REGIONS.forEach(r => { cards[r].tag.textContent = ''; cards[r].h.textContent = ''; cards[r].p.textContent = ''; });
+      REGIONS.forEach(r => { cards[r].tag.textContent = ''; cards[r].h.textContent = ''; cards[r].p.textContent = ''; setArt(r, null); });
       caption.textContent = L.ui.rewinding;
       stamp.textContent = '';
       linkPath.setAttribute('d', ''); linkDots.innerHTML = ''; linkLen = 0;
@@ -665,11 +674,19 @@ const Sound = (() => {
     REGIONS.forEach(r => {
       const [tag, head, detail] = tx[r];
       cards[r].tag.textContent = tag; cards[r].h.textContent = head; cards[r].p.textContent = detail;
+      setArt(r, s.art && s.art[r]);
     });
     caption.textContent = tx.caption;
     range.textContent = tx.range;
     stamp.textContent = s.stamp ? (tx.stamp || '') : '';
     drawLink(s.link);
+  }
+  // illustrations: every stroke gets pathLength=1 so one dash offset can draw it in
+  function setArt(r, name) {
+    const c = cards[r], svg = ART[name] || '';
+    c.ill.innerHTML = svg; c.art = !!svg;
+    c.slot.classList.toggle('has-ill', c.art);
+    c.ill.querySelectorAll('path, circle, rect, ellipse, line, polyline, polygon').forEach(el => el.setAttribute('pathLength', '1'));
   }
   function drawLink(link) {
     linkDots.innerHTML = '';
@@ -735,7 +752,9 @@ const Sound = (() => {
       const order = s.order || REGIONS;
       REGIONS.forEach(r => {
         const e = easeOut(clamp((tau - (.35 + .7 * order.indexOf(r))) / .5));
-        lane[r] = [e * (1 - exit), ((1 - e) * 56 - exit * 40) * MOVE];
+        const at = .35 + .7 * order.indexOf(r);
+        const draw = RM ? e : easeInOut(clamp((tau - at - .15) / 1.1));
+        lane[r] = [e * (1 - exit), ((1 - e) * 56 - exit * 40) * MOVE, draw, clamp((tau - at - .95) / .5)];
       });
       const ce = easeOut(clamp((tau - 2.45) / .45));
       capO = ce * (1 - exit); capY = (1 - ce) * 14 * MOVE;
@@ -749,7 +768,7 @@ const Sound = (() => {
     } else { // end
       const s = SCENES[SCENES.length - 1];
       v = s.year;
-      REGIONS.forEach(r => lane[r] = [1, 0]);
+      REGIONS.forEach(r => lane[r] = [1, 0, 1, 1]);
       capO = 1; rangeO = 1;
       endO = easeOut(clamp((tau - .2) / .8));
     }
@@ -757,10 +776,17 @@ const Sound = (() => {
     setOdo(v);
     setEras(v);
     range.style.opacity = rangeO;
+    const illK = stage.classList.contains('portrait') ? .3 : 1;
     REGIONS.forEach(r => {
-      const [o, x] = lane[r];
-      cards[r].el.style.opacity = o.toFixed(3);
-      cards[r].el.style.transform = `translateX(${x.toFixed(1)}px)`;
+      const [o, x, draw = 0, fill = 0] = lane[r], c = cards[r];
+      c.el.style.opacity = o.toFixed(3);
+      c.el.style.transform = `translateX(${x.toFixed(1)}px)`;
+      if (c.art) {
+        c.ill.style.opacity = (o * illK).toFixed(3);
+        c.ill.style.setProperty('--draw', (1 - draw).toFixed(3));
+        c.ill.style.setProperty('--fill', fill.toFixed(3));
+        c.ill.classList.toggle('drawing', draw < .999);
+      } else c.ill.style.opacity = 0;
     });
     caption.style.opacity = capO.toFixed(3);
     caption.style.transform = `translateY(${capY.toFixed(1)}px)`;

@@ -6,9 +6,9 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 const root = new URL('./', import.meta.url);
 const read = p => readFileSync(new URL(p, root), 'utf8');
 
-// Timeline first (it declares I18N), then every translation in src/i18n/
+// Timeline first (it declares I18N), the illustrations, then every translation in src/i18n/
 const langs = readdirSync(new URL('src/i18n/', root)).filter(f => f.endsWith('.js')).sort((a, b) => (a === 'en.js' ? -1 : b === 'en.js' ? 1 : a.localeCompare(b)));
-const data = [read('src/timeline.js'), ...langs.map(f => read(`src/i18n/${f}`))].join('\n');
+const data = [read('src/timeline.js'), read('src/art.js'), ...langs.map(f => read(`src/i18n/${f}`))].join('\n');
 
 // The lane wordmark and era chips use a few kanji in Shippori Mincho; ask Google Fonts for just those glyphs.
 const kanji = [...new Set(('日本' + [...data.matchAll(/k: "([^"]+)"/g)].map(m => m[1]).join('')).split(''))].join('');
