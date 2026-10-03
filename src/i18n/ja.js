@@ -15,6 +15,7 @@ I18N.ja = {
     mapRows: { jp: "日本", us: "アメリカ", de: "ドイツ" },
     controls: { play: "再生", pause: "一時停止", prev: "前の場面", next: "次の場面", position: "再生位置",
       speed: "再生速度", fullscreen: "全画面", sound: "サウンド", language: "言語" },
+    media: { nikkei: "日経平均株価・年末終値", gdp: "名目GDP 2023年・兆ドル", map: "地図：Natural Earth・航路はおおよそ", nikkeiSrc: "データ：日本経済新聞社", imfSrc: "データ：IMF", credits: "画像クレジット", close: "閉じる", unknown: "作者不詳", intro: "Wikimedia Commons の絵画・版画・写真を使用しています。出典をクリックすると原本とライセンスを確認できます。" },
     map: "時代マップ：年をクリックするとその場面へ移動",
     stage: "アニメーション映像：三つの時計",
   },

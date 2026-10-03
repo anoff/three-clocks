@@ -6,7 +6,9 @@
 //   stamp : true when the scene gets a rubber stamp (its text is translated)
 //   fx    : "shake" (earthquakes) or "dark" (World War II)
 //   dur   : seconds on screen at 1× (default 6.6)
-//   art   : illustration per lane, by name from src/art.js
+//   art   : line-art fallback per lane, by name from src/art.js
+//   media : map or chart per lane ("map:<name>" from src/maps.js, "chart:<name>" from src/charts.js);
+//           every other lane shows its photo/painting from assets/img/<year>-<lane>.jpg when src/media.js lists one
 const SCENES = [
   { year: 1027, art: { jp: "scroll", us: "mound", de: "crown" } },
   { year: 1077, order: ["de", "jp", "us"], art: { us: "mound", de: "snowfort" } },
@@ -14,15 +16,15 @@ const SCENES = [
   { year: 1241, order: ["de", "jp", "us"], link: ["jp", "de"], stamp: true, art: { jp: "storm", us: "corn", de: "bow" } },
   { year: 1348, order: ["de", "jp", "us"], art: { de: "skull" } },
   { year: 1455, order: ["de", "jp", "us"], art: { jp: "fire", us: "longhouse", de: "press" } },
-  { year: 1492, order: ["us", "de", "jp"], link: ["us", "de"], stamp: true, art: { jp: "banners", us: "caravel", de: "globe" } },
+  { year: 1492, order: ["us", "de", "jp"], link: ["us", "de"], stamp: true, art: { jp: "banners", us: "caravel", de: "globe" }, media: { us: "map:columbus" } },
   { year: 1521, order: ["de", "us", "jp"], link: ["us", "de"], stamp: true, art: { jp: "kabuto", us: "temple", de: "book" } },
-  { year: 1543, link: ["jp", "de"], stamp: true, art: { jp: "musket", us: "compass", de: "orbit" } },
+  { year: 1543, link: ["jp", "de"], stamp: true, art: { jp: "musket", us: "compass", de: "orbit" }, media: { us: "map:explorers" } },
   { year: 1600, order: ["de", "us", "jp"], art: { jp: "castle", us: "fort", de: "scales" } },
   { year: 1618, art: { jp: "lock", us: "caravel", de: "swords" } },
-  { year: 1683, order: ["us", "de", "jp"], link: ["us", "de"], stamp: true, art: { jp: "fan", us: "house", de: "shield" } },
+  { year: 1683, order: ["us", "de", "jp"], link: ["us", "de"], stamp: true, art: { jp: "fan", us: "house", de: "shield" }, media: { us: "map:krefeld" } },
   { year: 1701, order: ["de", "jp", "us"], art: { jp: "katana", us: "kite", de: "crown" } },
   { year: 1776, link: ["jp", "de"], stamp: true, art: { jp: "anatomy", us: "scroll", de: "heart" } },
-  { year: 1806, order: ["de", "us", "jp"], link: ["jp", "de"], art: { jp: "wave", us: "map", de: "ruin" } },
+  { year: 1806, order: ["de", "us", "jp"], link: ["jp", "de"], art: { jp: "wave", us: "map", de: "ruin" }, media: { us: "map:louisiana" } },
   { year: 1848, order: ["de", "us", "jp"], link: ["jp", "us"], stamp: true, art: { jp: "steamship", us: "goldpan", de: "flag" } },
   { year: 1868, order: ["us", "jp", "de"], link: ["jp", "us", "de"], stamp: true, art: { jp: "sunrise", us: "cannon", de: "pickelhaube" } },
   { year: 1889, order: ["us", "de", "jp"], link: ["jp", "de"], stamp: true, art: { jp: "scroll", us: "train", de: "tophat" } },
@@ -31,9 +33,9 @@ const SCENES = [
   { year: 1923, fx: "shake", stamp: true, art: { jp: "crack", us: "skyscraper", de: "wheelbarrow" } },
   { year: 1941, order: ["de", "jp", "us"], fx: "dark", dur: 9 },
   { year: 1964, order: ["us", "de", "jp"], art: { jp: "shinkansen", us: "moon", de: "beetle" } },
-  { year: 1989, order: ["de", "jp", "us"], link: ["jp", "de"], stamp: true, art: { jp: "bubble", de: "wall" } },
+  { year: 1989, order: ["de", "jp", "us"], link: ["jp", "de"], stamp: true, art: { jp: "bubble", de: "wall" }, media: { jp: "chart:nikkei" } },
   { year: 2011, link: ["jp", "de"], fx: "shake", stamp: true, art: { jp: "wave", us: "aid", de: "turbine" } },
-  { year: 2026, art: { jp: "blossom", us: "fireworks", de: "chart" } },
+  { year: 2026, art: { jp: "blossom", us: "fireworks", de: "chart" }, media: { de: "chart:gdp" } },
 ];
 
 // Era bands per lane. s/e = start/end year, k = era name in kanji (shown next to the romanized name).

@@ -125,9 +125,49 @@ body {
 .ill.drawing * { stroke-linecap: butt; } /* round caps leave dots on half-drawn dashes */
 .slot.has-ill { padding-right: 236px; }
 .card { position: relative; z-index: 1; }
+
+/* media panel: a painting/photo, a map or a chart, fading into the lane on its left edge */
+.media { position: absolute; top: 0; right: 0; bottom: 0; width: 42%; overflow: hidden; opacity: 0; pointer-events: none; background: #0d1520;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 26%); mask-image: linear-gradient(90deg, transparent 0, #000 26%); }
+.media:empty { display: none; }
+.media .kb { position: absolute; inset: 0; overflow: hidden; }
+.media img { width: 100%; height: 100%; object-fit: cover; display: block; will-change: transform; }
+.media svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.media .credit { position: absolute; right: 9px; bottom: 6px; max-width: 76%; z-index: 1; font: 600 9.5px/1.25 var(--f-body); letter-spacing: .02em;
+  color: rgba(255, 255, 255, .92); text-shadow: 0 1px 3px rgba(0, 0, 0, .9), 0 0 6px rgba(0, 0, 0, .5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.media .draw { stroke-dasharray: 1 1; stroke-dashoffset: var(--draw, 0); }
+.media .fillin { opacity: var(--fill, 1); }
+.media .pin { opacity: var(--fill, 1); }
+.media .grow { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(calc(1 - var(--draw, 0))); }
+.media .pulse { transform-box: fill-box; transform-origin: center; animation: pulse 1.6s ease-out infinite; }
+@keyframes pulse { from { transform: scale(1); opacity: .9; } to { transform: scale(2.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .media .pulse { animation: none; opacity: 0; } }
+.slot.has-media { padding-right: calc(42% - 34px); }
+.slot.has-media .ill { display: none; }
+.slot.has-media .card { gap: 18px; }
+.slot.has-media .tag { width: 112px; }
+.slot.has-media .txt h3 { font-size: 27px; }
+.slot.has-media .txt p { font-size: 18.5px; line-height: 1.3; }
+
+/* credits screen */
+.credits-card { background: var(--stage); justify-content: flex-start; gap: 12px; padding: 40px 76px 36px; cursor: default; user-select: text; -webkit-user-select: text; }
+.cr-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; }
+.cr-head h2 { margin: 0; font-family: var(--f-display); font-weight: 900; font-size: 56px; line-height: 1; text-transform: uppercase; }
+.cr-intro { margin: 0; color: var(--muted); font-size: 16px; max-width: 70ch; }
+.cr-list { margin: 0; padding: 0 8px 0 0; list-style: none; width: 100%; box-sizing: border-box; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 36px; align-content: start; font-size: 13.5px; line-height: 1.4; }
+.cr-list li { padding: 4px 0; border-bottom: 1px solid var(--line); min-width: 0; overflow-wrap: anywhere; }
+.cr-list b { font-variant-numeric: tabular-nums; }
+.cr-list a { color: inherit; text-decoration-color: color-mix(in oklab, var(--fg) 40%, transparent); text-underline-offset: 2px; }
+.cr-list a:focus-visible { outline: 2px solid var(--us); outline-offset: 2px; }
+.big-btn.ghost { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 2px var(--line); padding: 14px 22px; font-size: 18px; }
+.title-card .text-btn { border: 0; background: none; padding: 4px 0; color: var(--muted); font: 700 15px/1 var(--f-body); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.title-card .text-btn:focus-visible { outline: 3px solid var(--us); outline-offset: 2px; }
+.end-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 .link { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-.link path { fill: none; stroke: currentColor; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
-.link circle { fill: currentColor; }
+.link path { fill: none; stroke: #fff; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.link #linkShade { stroke: rgba(0, 0, 0, .42); stroke-width: 8; }
+.link circle { fill: #fff; stroke: rgba(0, 0, 0, .45); stroke-width: 2; }
 
 /* era map */
 .map { flex: none; display: grid; grid-template-columns: 84px minmax(0, 1fr); column-gap: 10px; }
@@ -215,6 +255,17 @@ html:lang(ja) .mark small, html:lang(ja) .labels span { letter-spacing: .04em; }
 .stage.portrait .era .es { display: inline; }
 .stage.portrait .era .es::before { content: " · "; }
 .stage.portrait .slot, .stage.portrait .slot.has-ill { padding: 10px 62px 12px 20px; }
+.stage.portrait .media { left: 0; width: auto; -webkit-mask-image: none; mask-image: none; }
+.stage.portrait .media::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(0deg, rgba(9, 11, 16, .95) 0%, rgba(9, 11, 16, .86) 48%, rgba(9, 11, 16, .38) 80%, rgba(9, 11, 16, .12) 100%); }
+.stage.portrait .media .credit { top: 7px; bottom: auto; right: 10px; font-size: 12px; }
+.stage.portrait .slot.has-media { padding: 10px 62px 14px 20px; align-items: flex-end; }
+.stage.portrait .slot.has-media .card { color: #fff; gap: 0; column-gap: 16px; }
+.stage.portrait .slot.has-media .tag { width: auto; }
+.stage.portrait .slot.has-media .txt h3 { font-size: 34px; }
+.stage.portrait .slot.has-media .txt p { font-size: 25px; color: rgba(255, 255, 255, .87); }
+.stage.portrait .credits-card { padding: 44px 40px; }
+.stage.portrait .cr-list { grid-template-columns: minmax(0, 1fr); font-size: 18px; }
 .stage.portrait .ill { right: 48px; top: auto; bottom: 2px; margin: 0; width: 160px; height: 133px; }
 .stage.portrait .card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 16px; row-gap: 8px; }
 .stage.portrait .txt { display: contents; }
@@ -285,23 +336,23 @@ html:lang(ja) .stage.portrait .end-card h2 { font-size: 84px; }
               <div class="mark jp"><span class="kanji" lang="ja">日本</span><span class="latin" id="sub-jp"></span></div>
               <div class="era" id="era-jp"></div>
             </div>
-            <div class="slot"><svg class="ill" id="ill-jp" viewBox="0 0 120 100" aria-hidden="true"></svg><div class="card" id="card-jp"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
+            <div class="slot"><div class="media" id="media-jp" aria-hidden="true"></div><svg class="ill" id="ill-jp" viewBox="0 0 120 100" aria-hidden="true"></svg><div class="card" id="card-jp"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
           </section>
           <section class="lane" data-r="us">
             <div class="name">
               <div class="mark us"><span class="wm" lang="en">America</span><small id="sub-us"></small></div>
               <div class="era" id="era-us"></div>
             </div>
-            <div class="slot"><svg class="ill" id="ill-us" viewBox="0 0 120 100" aria-hidden="true"></svg><div class="card" id="card-us"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
+            <div class="slot"><div class="media" id="media-us" aria-hidden="true"></div><svg class="ill" id="ill-us" viewBox="0 0 120 100" aria-hidden="true"></svg><div class="card" id="card-us"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
           </section>
           <section class="lane" data-r="de">
             <div class="name">
               <div class="mark de"><span class="wm" lang="de">Deutschland</span><small id="sub-de"></small></div>
               <div class="era" id="era-de"></div>
             </div>
-            <div class="slot"><svg class="ill" id="ill-de" viewBox="0 0 120 100" aria-hidden="true"></svg><div class="card" id="card-de"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
+            <div class="slot"><div class="media" id="media-de" aria-hidden="true"></div><svg class="ill" id="ill-de" viewBox="0 0 120 100" aria-hidden="true"></svg><div class="card" id="card-de"><div class="tag"></div><div class="txt"><h3></h3><p></p></div></div></div>
           </section>
-          <svg class="link" id="link" aria-hidden="true"><path id="linkPath" d=""></path><g id="linkDots"></g></svg>
+          <svg class="link" id="link" aria-hidden="true"><path id="linkShade" d=""></path><path id="linkPath" d=""></path><g id="linkDots"></g></svg>
         </div>
 
         <div class="map" id="map">
@@ -327,12 +378,22 @@ html:lang(ja) .stage.portrait .end-card h2 { font-size: 84px; }
         <p class="sub" id="titleSub"></p>
         <div class="tc-langs" id="tcLangs" role="group"></div>
         <button class="big-btn" id="bigPlay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg><span id="bigPlayLabel"></span></button>
+        <button class="text-btn" id="tcCredits" type="button"></button>
       </div>
 
       <div class="overlay end-card" id="endCard">
         <h2 id="endH2"></h2>
         <p class="note" id="endNote"></p>
-        <button class="big-btn" id="replay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/></svg><span id="replayLabel"></span></button>
+        <div class="end-actions">
+          <button class="big-btn" id="replay" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7a6 6 0 1 1-6 6H4a8 8 0 1 0 8-8z"/></svg><span id="replayLabel"></span></button>
+          <button class="big-btn ghost" id="endCredits" type="button"></button>
+        </div>
+      </div>
+
+      <div class="overlay credits-card" id="creditsCard" hidden>
+        <div class="cr-head"><h2 id="crTitle"></h2><button class="big-btn ghost" id="crClose" type="button"></button></div>
+        <p class="cr-intro" id="crIntro"></p>
+        <ol class="cr-list" id="crList"></ol>
       </div>
     </div>
   </div>
@@ -552,6 +613,9 @@ const Sound = (() => {
     $('endH2').innerHTML = u.end.map(l => `<span>${endLine(l)}</span>`).join('');
     $('endNote').textContent = u.note;
     $('replayLabel').textContent = u.replay;
+    $('endCredits').textContent = u.media.credits; $('tcCredits').textContent = u.media.credits;
+    $('crTitle').textContent = u.media.credits; $('crClose').textContent = u.media.close; $('crIntro').textContent = u.media.intro;
+    if (!creditsCard.hidden) fillCredits();
     REGIONS.forEach(r => {
       $('sub-' + r).textContent = u.laneSub[r];
       $('row-' + r).textContent = u.mapRows[r];
@@ -655,19 +719,19 @@ const Sound = (() => {
   const cards = {};
   REGIONS.forEach(r => {
     const c = $('card-' + r);
-    cards[r] = { el: c, tag: c.querySelector('.tag'), h: c.querySelector('h3'), p: c.querySelector('p'), ill: $('ill-' + r), slot: c.parentNode, art: false };
+    cards[r] = { el: c, tag: c.querySelector('.tag'), h: c.querySelector('h3'), p: c.querySelector('p'), ill: $('ill-' + r), slot: c.parentNode, art: false, media: $('media-' + r), mkind: null, kbImg: null, mfocus: null, svg: null };
   });
   const caption = $('caption'), range = $('range'), stamp = $('stamp');
-  const linkPath = $('linkPath'), linkDots = $('linkDots');
+  const linkPath = $('linkPath'), linkShade = $('linkShade'), linkDots = $('linkDots');
   let curContent = null, linkLen = 0;
 
   function setContent(ci) {
     curContent = ci;
     if (ci < 0) {
-      REGIONS.forEach(r => { cards[r].tag.textContent = ''; cards[r].h.textContent = ''; cards[r].p.textContent = ''; setArt(r, null); });
+      REGIONS.forEach(r => { cards[r].tag.textContent = ''; cards[r].h.textContent = ''; cards[r].p.textContent = ''; setArt(r, null); setMedia(r, -1); });
       caption.textContent = L.ui.rewinding;
       stamp.textContent = '';
-      linkPath.setAttribute('d', ''); linkDots.innerHTML = ''; linkLen = 0;
+      linkPath.setAttribute('d', ''); linkShade.setAttribute('d', ''); linkDots.innerHTML = ''; linkLen = 0;
       return;
     }
     const s = SCENES[ci], tx = scText(ci);
@@ -675,7 +739,9 @@ const Sound = (() => {
       const [tag, head, detail] = tx[r];
       cards[r].tag.textContent = tag; cards[r].h.textContent = head; cards[r].p.textContent = detail;
       setArt(r, s.art && s.art[r]);
+      setMedia(r, ci);
     });
+    preload(ci + 1); preload(ci + 2);
     caption.textContent = tx.caption;
     range.textContent = tx.range;
     stamp.textContent = s.stamp ? (tx.stamp || '') : '';
@@ -688,19 +754,125 @@ const Sound = (() => {
     c.slot.classList.toggle('has-ill', c.art);
     c.ill.querySelectorAll('path, circle, rect, ellipse, line, polyline, polygon').forEach(el => el.setAttribute('pathLength', '1'));
   }
+  // ---- media panels: photo/painting (Ken Burns), map or chart ----
+  const mediaSpec = (k, r) => { const s = SCENES[k], m = s.media && s.media[r]; return m || (MEDIA[`${s.year}-${r}`] ? 'img' : null); };
+  const creditLine = m => `${m.artist || L.ui.media.unknown} · ${m.license}`;
+  const preloaded = new Set();
+  function preload(k) {
+    if (k < 0 || k >= SCENES.length) return;
+    REGIONS.forEach(r => { const id = `${SCENES[k].year}-${r}`; if (MEDIA[id] && !preloaded.has(id)) { preloaded.add(id); const im = new Image(); im.decoding = 'async'; im.src = `img/${id}.jpg`; } });
+  }
+  function setMedia(r, k) {
+    const c = cards[r], spec = k >= 0 ? mediaSpec(k, r) : null, box = c.media;
+    c.mkind = null; c.kbImg = null; c.mfocus = null; c.svg = null;
+    if (!spec) { box.innerHTML = ''; c.slot.classList.remove('has-media'); return; }
+    const id = `${SCENES[k].year}-${r}`;
+    if (spec === 'img') {
+      const m = MEDIA[id], [fx, fy] = m.focus;
+      box.innerHTML = `<div class="kb"><img alt="" decoding="async" src="img/${id}.jpg" style="object-position:${fx}% ${fy}%;transform-origin:${fx}% ${fy}%"></div><div class="credit">${esc(creditLine(m))}</div>`;
+      c.kbImg = box.querySelector('img'); c.mfocus = m.focus; c.mkind = 'img';
+      c.kbImg.addEventListener('error', () => { if (c.kbImg && c.kbImg.getAttribute('src') === `img/${id}.jpg`) { box.innerHTML = ''; c.slot.classList.remove('has-media'); c.mkind = null; c.kbImg = null; } }, { once: true });
+    } else if (spec.startsWith('map:')) {
+      box.innerHTML = mapSVG(spec.slice(4), r) + `<div class="credit">${esc(L.ui.media.map)}</div>`; c.mkind = 'svg';
+    } else if (spec.startsWith('chart:')) {
+      const name = spec.slice(6);
+      box.innerHTML = chartSVG(name, r) + `<div class="credit">${esc(L.ui.media[CHARTS[name].source + 'Src'])}</div>`; c.mkind = 'svg';
+    }
+    c.svg = box.querySelector('svg');
+    if (c.svg) c.svg.querySelectorAll('.draw').forEach(el => el.setAttribute('pathLength', '1'));
+    c.slot.classList.toggle('has-media', !!c.mkind);
+  }
+  const HL_COLOR = { '392': 'var(--jp)', '840': 'var(--us)', '276': 'var(--de)' };
+  function mapSVG(name, r) {
+    const m = MAPS[name], id = `mp-${r}`, faintHl = m.regions.length > 0;
+    const grad = (gid, col) => `<linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:color-mix(in oklab, ${col} 62%, #fff)"/><stop offset="1" style="stop-color:${col}"/></linearGradient>`;
+    const hls = Object.entries(m.hl);
+    const pin = p => p.kind === 'origin'
+      ? `<g class="pin" transform="translate(${p.x} ${p.y})"><circle r="5.5" fill="#fff" stroke="#0b1f33" stroke-width="2.2"/></g>`
+      : `<g class="pin" transform="translate(${p.x} ${p.y})"><circle class="pulse" r="7" fill="none" stroke="#ff7a5c" stroke-width="2.2"/><circle r="6.5" fill="#ff5a3d" stroke="#fff" stroke-width="2.2"/></g>`;
+    return `<svg viewBox="0 0 ${m.w} ${m.h}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>
+      <linearGradient id="${id}-sea" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#081d31"/><stop offset=".55" stop-color="#0e3f60"/><stop offset="1" stop-color="#18697c"/></linearGradient>
+      <linearGradient id="${id}-land" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e9cd"/><stop offset="1" stop-color="#c9b385"/></linearGradient>
+      <linearGradient id="${id}-reg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#f08c3a"/></linearGradient>
+      ${hls.map(([cid]) => grad(`${id}-h${cid}`, HL_COLOR[cid] || '#d9a441')).join('')}
+      <radialGradient id="${id}-vig" cx=".58" cy=".42" r=".8"><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient></defs>
+      <rect width="${m.w}" height="${m.h}" fill="url(#${id}-sea)"/>
+      <path d="${m.grid}" fill="none" stroke="#fff" stroke-opacity=".09"/>
+      <path d="${m.land}" fill="url(#${id}-land)" stroke="#6f5d3a" stroke-opacity=".45" stroke-width=".6"/>
+      ${hls.map(([cid, d]) => `<path d="${d}" fill="url(#${id}-h${cid})" fill-opacity="${faintHl ? .45 : .92}" stroke="#fff" stroke-opacity=".6" stroke-width=".7"/>`).join('')}
+      ${m.regions.map(d => `<path class="fillin" d="${d}" fill="url(#${id}-reg)" fill-opacity=".92" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>`).join('')}
+      ${m.routes.map(d => `<path class="draw" d="${d}" fill="none" stroke="#04101c" stroke-opacity=".55" stroke-width="7" stroke-linecap="round"/><path class="draw" d="${d}" fill="none" stroke="#ffd36e" stroke-width="3.2" stroke-linecap="round"/>`).join('')}
+      ${m.pins.map(pin).join('')}
+      <rect width="${m.w}" height="${m.h}" fill="url(#${id}-vig)"/></svg>`;
+  }
+  const num = (v, d = 0) => v.toLocaleString(lang === 'ja' ? 'ja-JP' : lang === 'de' ? 'de-DE' : 'en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  function chartSVG(name, r) {
+    const d = CHARTS[name], id = `ch-${r}`, W = 640, H = 200;
+    const bg = `<linearGradient id="${id}-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f1726"/><stop offset="1" stop-color="#1c2c45"/></linearGradient>`;
+    const title = `<text x="${W - 40}" y="28" text-anchor="end" fill="#fff" fill-opacity=".9" style="font: 700 14px var(--f-body)">${esc(L.ui.media[name])}</text>`;
+    if (name === 'nikkei') {
+      const x0 = 196, x1 = 600, y0 = 46, y1 = 160, n = d.values.length, max = 40000;
+      const X = i => x0 + (x1 - x0) * i / (n - 1), Y = v => y1 - (y1 - y0) * v / max;
+      const line = d.values.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join('');
+      const pk = d.peak - d.from, px = X(pk), py = Y(d.values[pk]);
+      const grid = [10000, 20000, 30000, 40000].map(v => `<path d="M${x0} ${Y(v)}H${x1}" stroke="#fff" stroke-opacity=".1"/><text x="${x0 - 8}" y="${Y(v) + 4}" text-anchor="end" fill="#fff" fill-opacity=".55" style="font: 600 11px var(--f-body)">${num(v / 1000)}k</text>`).join('');
+      const years = [1985, 1990, 1995].map(y => `<text x="${X(y - d.from)}" y="${y1 + 20}" text-anchor="middle" fill="#fff" fill-opacity=".65" style="font: 700 12px var(--f-body)">${y}</text>`).join('');
+      return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${bg}
+        <linearGradient id="${id}-a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--c)" stop-opacity=".85"/><stop offset="1" style="stop-color:var(--c)" stop-opacity="0"/></linearGradient></defs>
+        <rect width="${W}" height="${H}" fill="url(#${id}-bg)"/>${grid}${years}${title}
+        <path class="fillin" d="${line}L${X(n - 1)} ${y1}L${x0} ${y1}Z" fill="url(#${id}-a)"/>
+        <path class="draw" d="${line}" fill="none" style="stroke:color-mix(in oklab, var(--c) 55%, #fff)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+        <g class="pin" transform="translate(${px} ${py})"><circle class="pulse" r="8" fill="none" stroke="#fff" stroke-width="2"/><circle r="6" fill="#fff"/>
+        <text x="12" y="5" fill="#fff" style="font: 800 15px var(--f-body)">${num(d.values[pk])}</text></g></svg>`;
+    }
+    // gdp: ranked bars; the two giants run off the top of the scale
+    const x0 = 150, step = 82, bw = 52, y0 = 44, y1 = 152, scale = (y1 - y0) / d.max;
+    const bars = d.bars.map(([code, v, lane], i) => {
+      const x = x0 + i * step, over = v > d.max, h = Math.min(v, d.max) * scale + (over ? 10 : 0), y = y1 - h;
+      const col = lane ? `var(--${lane})` : '#5d6b82';
+      const label = over ? `<text x="${x + bw / 2}" y="${y + 20}" text-anchor="middle" fill="#fff" style="font: 800 14px var(--f-body)">${num(v, 1)}</text>`
+        : `<text x="${x + bw / 2}" y="${y - 8}" text-anchor="middle" fill="#fff" style="font: 800 15px var(--f-body)">${num(v, 2)}</text>`;
+      const brk = over ? `<path d="M${x - 3} ${y + 34}l${bw / 4} -6l${bw / 4} 6l${bw / 4} -6l${bw / 4 + 6} 6" stroke="#0f1726" stroke-width="4" fill="none"/>` : '';
+      return `<g><rect class="grow" x="${x}" y="${y}" width="${bw}" height="${h}" rx="4" style="fill:${col}"/><rect class="grow" x="${x}" y="${y}" width="${bw}" height="${h}" rx="4" fill="url(#${id}-sh)"/>${brk}
+        <g class="pin">${label}</g><text x="${x + bw / 2}" y="${y1 + 19}" text-anchor="middle" fill="#fff" fill-opacity="${lane ? 1 : .65}" style="font: 800 13px var(--f-body)">${i + 1}. ${code}</text></g>`;
+    }).join('');
+    return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${bg}
+      <linearGradient id="${id}-sh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient></defs>
+      <rect width="${W}" height="${H}" fill="url(#${id}-bg)"/><path d="M${x0 - 14} ${y1}H${x0 + 4 * step + bw + 14}" stroke="#fff" stroke-opacity=".3"/>${bars}${title}</svg>`;
+  }
+
+  // ---- credits screen ----
+  const creditsCard = $('creditsCard');
+  function fillCredits() {
+    const items = [];
+    SCENES.forEach((s, k) => REGIONS.forEach(r => {
+      const m = MEDIA[`${s.year}-${r}`]; if (!m) return;
+      const head = L.scenes[s.year][r][1];
+      items.push(`<li><b>${s.year}</b> · ${esc(L.ui.mapRows[r])} · ${esc(head)}<br>${esc(m.artist || L.ui.media.unknown)} · <a href="${esc(m.source)}" target="_blank" rel="noopener">${esc(m.license)}</a></li>`);
+    }));
+    items.push(`<li>${esc(L.ui.media.map)} · <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a></li>`);
+    items.push(`<li>${esc(L.ui.media.nikkeiSrc)} · ${esc(L.ui.media.imfSrc)}</li>`);
+    $('crList').innerHTML = items.join('');
+  }
+  function openCredits(on) {
+    if (on) { setPlaying(false); fillCredits(); }
+    creditsCard.hidden = !on;
+    (on ? $('crClose') : (t === 0 ? $('bigPlay') : $('playBtn'))).focus({ preventScroll: true });
+  }
+
   function drawLink(link) {
     linkDots.innerHTML = '';
-    if (!link) { linkPath.setAttribute('d', ''); linkLen = 0; return; }
+    if (!link) { linkPath.setAttribute('d', ''); linkShade.setAttribute('d', ''); linkLen = 0; return; }
     const W = lanes.offsetWidth, x = W - 30, arm = 30;
     const els = [...lanes.querySelectorAll('.lane')];
     const ys = REGIONS.map((r, i) => { if (!link.includes(r)) return null; const sl = els[i].querySelector('.slot'); return els[i].offsetTop + sl.offsetTop + sl.offsetHeight / 2; }).filter(v => v !== null);
     const top = ys[0], bot = ys[ys.length - 1];
     let d = `M ${x - arm} ${top} H ${x} V ${bot} H ${x - arm}`;
     ys.slice(1, -1).forEach(y => { d += ` M ${x} ${y} H ${x - arm}`; });
-    linkPath.setAttribute('d', d);
+    linkPath.setAttribute('d', d); linkShade.setAttribute('d', d);
     linkDots.innerHTML = ys.map(y => `<circle cx="${x - arm}" cy="${y}" r="6"></circle>`).join('');
     linkLen = linkPath.getTotalLength ? linkPath.getTotalLength() : 600;
-    linkPath.style.strokeDasharray = linkLen;
+    linkPath.style.strokeDasharray = linkLen; linkShade.style.strokeDasharray = linkLen;
   }
 
   // ---- render ----
@@ -754,7 +926,8 @@ const Sound = (() => {
         const e = easeOut(clamp((tau - (.35 + .7 * order.indexOf(r))) / .5));
         const at = .35 + .7 * order.indexOf(r);
         const draw = RM ? e : easeInOut(clamp((tau - at - .15) / 1.1));
-        lane[r] = [e * (1 - exit), ((1 - e) * 56 - exit * 40) * MOVE, draw, clamp((tau - at - .95) / .5)];
+        lane[r] = [e * (1 - exit), ((1 - e) * 56 - exit * 40) * MOVE, draw, clamp((tau - at - .95) / .5),
+          RM ? 1 : easeInOut(clamp((tau - at - .3) / 1.5)), clamp((tau - at - 1.3) / .6), RM ? 0 : clamp(tau / D)];
       });
       const ce = easeOut(clamp((tau - 2.45) / .45));
       capO = ce * (1 - exit); capY = (1 - ce) * 14 * MOVE;
@@ -768,7 +941,7 @@ const Sound = (() => {
     } else { // end
       const s = SCENES[SCENES.length - 1];
       v = s.year;
-      REGIONS.forEach(r => lane[r] = [1, 0, 1, 1]);
+      REGIONS.forEach(r => lane[r] = [1, 0, 1, 1, 1, 1, RM ? 0 : 1]);
       capO = 1; rangeO = 1;
       endO = easeOut(clamp((tau - .2) / .8));
     }
@@ -778,7 +951,14 @@ const Sound = (() => {
     range.style.opacity = rangeO;
     const illK = stage.classList.contains('portrait') ? .3 : 1;
     REGIONS.forEach(r => {
-      const [o, x, draw = 0, fill = 0] = lane[r], c = cards[r];
+      const [o, x, draw = 0, fill = 0, mdraw = 0, mfill = 0, kb = 0] = lane[r], c = cards[r];
+      if (c.mkind) {
+        c.media.style.opacity = o.toFixed(3);
+        if (c.kbImg) {
+          const [fx, fy] = c.mfocus;
+          c.kbImg.style.transform = `translate(${((50 - fx) * .06 * kb).toFixed(2)}%, ${((50 - fy) * .06 * kb).toFixed(2)}%) scale(${(1.04 + .1 * kb).toFixed(4)})`;
+        } else if (c.svg) { c.svg.style.setProperty('--draw', (1 - mdraw).toFixed(3)); c.svg.style.setProperty('--fill', mfill.toFixed(3)); }
+      } else c.media.style.opacity = 0;
       c.el.style.opacity = o.toFixed(3);
       c.el.style.transform = `translateX(${x.toFixed(1)}px)`;
       if (c.art) {
@@ -790,7 +970,7 @@ const Sound = (() => {
     });
     caption.style.opacity = capO.toFixed(3);
     caption.style.transform = `translateY(${capY.toFixed(1)}px)`;
-    if (linkLen) { linkPath.style.strokeDashoffset = (linkLen * (1 - linkP)).toFixed(1); linkDots.style.opacity = clamp((linkP - .6) / .4); }
+    if (linkLen) { linkPath.style.strokeDashoffset = linkShade.style.strokeDashoffset = (linkLen * (1 - linkP)).toFixed(1); linkDots.style.opacity = clamp((linkP - .6) / .4); }
     const sRot = stage.classList.contains('portrait') ? '' : 'translateY(-50%) ';
     stamp.style.opacity = stampO.toFixed(3);
     stamp.style.transform = `${sRot}rotate(-7deg) scale(${stampS.toFixed(3)})`;
@@ -860,6 +1040,10 @@ const Sound = (() => {
   playBtn.addEventListener('click', () => setPlaying(!playing));
   $('bigPlay').addEventListener('click', e => { e.stopPropagation(); setPlaying(true); });
   $('replay').addEventListener('click', e => { e.stopPropagation(); t = 0; setPlaying(true); });
+  [$('endCredits'), $('tcCredits')].forEach(b => b.addEventListener('click', e => { e.stopPropagation(); openCredits(true); }));
+  $('crClose').addEventListener('click', e => { e.stopPropagation(); openCredits(false); });
+  creditsCard.addEventListener('click', e => e.stopPropagation());
+  creditsCard.addEventListener('keydown', e => { if (e.key === 'Escape') openCredits(false); e.stopPropagation(); });
   $('prevBtn').addEventListener('click', () => { const { i, tau } = locate(Math.min(t, TOTAL - 1e-6)); seekSeg(tau > 1.6 && playing ? i : i - 1); });
   $('nextBtn').addEventListener('click', () => { const { i } = locate(Math.min(t, TOTAL - 1e-6)); seekSeg(i + 1); });
   const SPEEDS = [1, 1.5, 2, .75];
@@ -936,6 +1120,7 @@ const Sound = (() => {
   // hook for local previews and tests
   window.__film = { seek: s => { t = s; dirty = true; render(); }, setLang: c => { setLang(c); render(); }, total: TOTAL, segs: SEGS };
 
+  preload(0); preload(1);
   langButtons($('langs'));
   langButtons($('tcLangs'));
   setLang(pickInitialLang(), false);

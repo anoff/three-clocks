@@ -15,6 +15,7 @@ I18N.de = {
     mapRows: { jp: "Japan", us: "Amerika", de: "Deutschl." },
     controls: { play: "Abspielen", pause: "Pause", prev: "Vorherige Szene", next: "Nächste Szene", position: "Position im Film",
       speed: "Geschwindigkeit", fullscreen: "Vollbild", sound: "Ton", language: "Sprache" },
+    media: { nikkei: "Nikkei 225 · Jahresschlusskurs", gdp: "BIP 2023 · Billionen US$", map: "Karte: Natural Earth · Routen ungefähr", nikkeiSrc: "Daten: Nikkei", imfSrc: "Daten: IWF", credits: "Bildnachweise", close: "Schließen", unknown: "Unbekannter Künstler", intro: "Gemälde, Drucke und Fotos von Wikimedia Commons. Ein Klick auf die Quelle zeigt Original und Lizenz." },
     map: "Epochenleiste: Jahr anklicken, um dorthin zu springen",
     stage: "Animationsfilm: Drei Uhren",
   },

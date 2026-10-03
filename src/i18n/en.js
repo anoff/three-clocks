@@ -16,6 +16,7 @@ I18N.en = {
     mapRows: { jp: "Japan", us: "America", de: "Germany" },
     controls: { play: "Play", pause: "Pause", prev: "Previous scene", next: "Next scene", position: "Film position",
       speed: "Playback speed", fullscreen: "Full screen", sound: "Sound", language: "Language" },
+    media: { nikkei: "Nikkei 225 · year-end close", gdp: "GDP 2023 · US$ trillion", map: "Map: Natural Earth · routes approximate", nikkeiSrc: "Data: Nikkei", imfSrc: "Data: IMF", credits: "Image credits", close: "Close", unknown: "Unknown artist", intro: "Paintings, prints and photos from Wikimedia Commons. Click a source to see the original and its license." },
     map: "Era map: click a year to jump there",
     stage: "Animated film: Three Clocks",
   },
