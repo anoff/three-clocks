@@ -1,7 +1,7 @@
 I18N.de = {
   label: "DE", name: "Deutsch",
   ui: {
-    eyebrow: "Ein Geschichtsfilm in vier Minuten",
+    eyebrow: "Ein Geschichtsfilm in fünf Minuten",
     title: ["Drei", "Uhren"],
     sub: "Japan, Amerika und Deutschland in den letzten 1.000 Jahren. Was geschah zur selben Zeit?",
     play: "Film abspielen",

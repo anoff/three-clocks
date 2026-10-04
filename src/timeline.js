@@ -5,8 +5,8 @@
 //   person or event and lower lanes may refer back to it, never the other way round.
 //   link  : lanes joined by a bracket ("these happened together")
 //   stamp : true when the scene gets a rubber stamp (its text is translated)
-//   fx    : "shake" (earthquakes) or "dark" (World War II)
-//   dur   : seconds on screen at 1× (default 6.6)
+//   fx    : "shake" (earthquakes), "dark" (World War II) or "virus" (COVID)
+//   dur   : seconds on screen at 1× (default 8.6)
 //   art   : line-art fallback per lane, by name from src/art.js
 //   media : map or chart per lane ("map:<name>" from src/maps.js, "chart:<name>" from src/charts.js);
 //           every other lane shows its photo/painting from assets/img/<year>-<lane>.jpg when src/media.js lists one
@@ -35,14 +35,14 @@ const SCENES = [
   { year: 1905, link: ["jp", "de"], stamp: true, art: { jp: "warship", us: "kite", de: "atom" } },
   { year: 1919, stamp: true, art: { jp: "fire", us: "flag", de: "scroll" } },
   { year: 1923, fx: "shake", stamp: true, art: { jp: "crack", us: "skyscraper", de: "wheelbarrow" } },
-  { year: 1941, fx: "dark", dur: 9 },
+  { year: 1941, fx: "dark", dur: 11.7 },
   { year: 1949, art: { jp: "scroll", us: "house", de: "dove" } },
   { year: 1963, art: { jp: "skyscraper", us: "dove", de: "wall" } },
   { year: 1964, link: ["jp", "us"], stamp: true, art: { jp: "shinkansen", us: "moon", de: "beetle" } },
   { year: 1989, link: ["jp", "de"], stamp: true, art: { jp: "bubble", de: "wall" }, media: { jp: "chart:nikkei" } },
   { year: 2001, art: { jp: "crack", us: "skyscraper", de: "chart" } },
   { year: 2011, fx: "shake", art: { jp: "wave", us: "flag", de: "heart" } },
-  { year: 2020, link: ["jp", "us", "de"], stamp: true, art: { jp: "blossom", us: "aid", de: "atom" } },
+  { year: 2020, link: ["jp", "us", "de"], stamp: true, fx: "virus", art: { jp: "blossom", us: "aid", de: "atom" } },
   { year: 2026, art: { jp: "blossom", us: "fireworks", de: "chart" }, media: { de: "chart:gdp" } },
 ];
 

@@ -1,6 +1,6 @@
 # Three Clocks, One Millennium
 
-A four-minute animated film that runs the last 1,000 years of **Japan**, **America** and **Germany & Europe** side by side, so you can see what was happening in each place at the same moment.
+A five-minute animated film that runs the last 1,000 years of **Japan**, **America** and **Germany & Europe** side by side, so you can see what was happening in each place at the same moment.
 
 **Watch it:** https://anoff.github.io/three-clocks/ (add `#de` or `#ja` to open it in German or Japanese)
 
@@ -11,7 +11,7 @@ A four-minute animated film that runs the last 1,000 years of **Japan**, **Ameri
 - A full credits screen (title card and end card) and [CREDITS.md](CREDITS.md) list every image with author and license.
 - The era map at the bottom shows how Heian, the Holy Roman Empire, the Edo period, the American colonies and the rest overlap. Click any year to jump there.
 - **Languages:** English, Deutsch, 日本語. The picker is on the title card and in the controls; the first visit follows the browser language.
-- **Soundtrack:** an original groove synthesized live with the Web Audio API (no audio files). It drops to a quiet drone for World War II, with a stamp thud, earthquake rumble and a rewind whoosh. Toggle it with the speaker button or `M`.
+- **Soundtrack:** an original groove synthesized live with the Web Audio API (no audio files). It drops to a quiet drone for World War II, with a stamp thud, earthquake rumble, COVID heartbeat and a rewind whoosh, and keeps playing while the film is paused. Toggle it with the speaker button or `M`.
 - Works in landscape and portrait (phones get a vertical layout), light and dark mode, and respects reduced-motion settings.
 
 Keyboard: `Space` play/pause · `←` `→` previous/next scene · `M` sound on/off.

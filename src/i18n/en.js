@@ -1,7 +1,7 @@
 I18N.en = {
   label: "EN", name: "English",
   ui: {
-    eyebrow: "A four-minute history film",
+    eyebrow: "A five-minute history film",
     title: ["Three", "Clocks"],
     sub: "Japan, America and Germany over the last 1,000 years. What was happening at the same time?",
     play: "Play the film",
