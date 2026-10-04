@@ -43,8 +43,9 @@
   {
    "id": "1077-us",
    "c": [
-    "en:Monks_Mound",
-    "search:Cahokia Mounds State Historic Site#2"
+    "en:Pueblo_Bonito",
+    "en:Chaco_Culture_National_Historical_Park",
+    "search:Pueblo Bonito aerial#2"
    ]
   },
   {
@@ -91,8 +92,9 @@
   {
    "id": "1241-us",
    "c": [
-    "en:Mississippian_culture",
-    "search:Mississippian culture Etowah mounds#2"
+    "en:Balcony_House",
+    "search:Mesa Verde Long House#2",
+    "search:Square Tower House Mesa Verde#2"
    ]
   },
   {
@@ -161,9 +163,9 @@
   {
    "id": "1492-jp",
    "c": [
-    "en:Sengoku_period",
-    "ja:戦国時代_(日本)",
-    "search:Sengoku daimyo portrait#1"
+    "en:Ginkaku-ji",
+    "ja:慈照寺",
+    "search:Ginkakuji Silver Pavilion#2"
    ]
   },
   {
@@ -185,8 +187,9 @@
   {
    "id": "1521-jp",
    "c": [
-    "en:Battle_of_Kawanakajima",
-    "search:Kawanakajima battle folding screen#2"
+    "en:Iwami_Ginzan_Silver_Mine",
+    "ja:石見銀山",
+    "search:Iwami Ginzan Ryugenji mabu#2"
    ]
   },
   {
@@ -216,16 +219,17 @@
   {
    "id": "1600-de",
    "c": [
-    "en:Peace_of_Augsburg",
-    "de:Augsburger_Reichs-_und_Religionsfrieden"
+    "en:Relation_aller_Fürnemmen_und_gedenckwürdigen_Historien",
+    "de:Relation_aller_Fürnemmen_und_gedenckwürdigen_Historien",
+    "search:Relation 1609 Zeitung Straßburg#2"
    ]
   },
   {
    "id": "1600-us",
    "c": [
-    "en:Castillo_de_San_Marcos",
-    "en:St._Augustine,_Florida",
-    "search:Castillo de San Marcos aerial#1"
+    "en:Jamestown,_Virginia",
+    "en:Jamestown_Settlement",
+    "search:Jamestown fort 1607 painting#2"
    ]
   },
   {
@@ -255,17 +259,17 @@
   {
    "id": "1618-us",
    "c": [
-    "en:Mayflower",
-    "search:Mayflower Plymouth Harbor Halsall#1",
-    "en:Jamestown,_Virginia"
+    "en:20_and_odd",
+    "search:1619 Africans Jamestown arrival illustration#3",
+    "en:Slavery_in_the_colonial_history_of_the_United_States"
    ]
   },
   {
    "id": "1683-us",
    "c": [
-    "en:Germantown,_Philadelphia",
-    "en:Francis_Daniel_Pastorius",
-    "search:Germantown 1683 founding#1"
+    "en:Pueblo_Revolt",
+    "en:Popé",
+    "search:Popé statue Capitol#2"
    ]
   },
   {
@@ -303,8 +307,8 @@
   {
    "id": "1701-us",
    "c": [
-    "en:Benjamin_Franklin",
-    "search:Benjamin Franklin Duplessis portrait#1"
+    "en:The_Old_Plantation",
+    "search:Old Plantation South Carolina watercolor#1"
    ]
   },
   {
@@ -433,9 +437,8 @@
   {
    "id": "1905-us",
    "c": [
-    "search:Roosevelt Witte Komura 1905#3",
-    "search:Portsmouth peace conference 1905#3",
-    "search:Treaty of Portsmouth delegates Mayflower#2"
+    "en:Wright_Flyer",
+    "search:first flight Wright 1903 photograph#2"
    ]
   },
   {
@@ -551,16 +554,17 @@
   {
    "id": "2011-us",
    "c": [
-    "en:Operation_Tomodachi",
-    "search:Operation Tomodachi Navy helicopter#2"
+    "en:First_inauguration_of_Barack_Obama",
+    "search:Obama inauguration 2009 crowd#2",
+    "en:2008_financial_crisis"
    ]
   },
   {
    "id": "2011-de",
    "c": [
-    "en:Nuclear_power_phase-out",
-    "de:Atomausstieg",
-    "search:Kernkraftwerk Grafenrheinfeld#2"
+    "en:2015_European_migrant_crisis",
+    "search:refugees Munich Hauptbahnhof 2015#2",
+    "search:Flüchtlinge Bahnhof 2015#1"
    ]
   },
   {
@@ -583,6 +587,189 @@
    "c": [
     "en:Economy_of_Germany",
     "search:Frankfurt skyline#1"
+   ]
+  },
+  {
+   "id": "1555-jp",
+   "c": [
+    "en:Francis_Xavier",
+    "search:Francis Xavier Kobe City Museum portrait#2"
+   ]
+  },
+  {
+   "id": "1590-jp",
+   "c": [
+    "en:Oda_Nobunaga",
+    "en:Toyotomi_Hideyoshi",
+    "en:Battle_of_Nagashino",
+    "search:Nagashino battle screen#1"
+   ]
+  },
+  {
+   "id": "1590-de",
+   "c": [
+    "en:Gregorian_calendar",
+    "en:Pope_Gregory_XIII",
+    "search:Inter gravissimas 1582#1"
+   ]
+  },
+  {
+   "id": "1590-us",
+   "c": [
+    "en:Roanoke_Colony",
+    "search:John White watercolour Secotan village#2",
+    "search:John White Roanoke drawing#2"
+   ]
+  },
+  {
+   "id": "1877-jp",
+   "c": [
+    "en:Satsuma_Rebellion",
+    "en:Saigō_Takamori",
+    "search:Satsuma Rebellion woodblock print#2"
+   ]
+  },
+  {
+   "id": "1886-jp",
+   "c": [
+    "en:Tomioka_Silk_Mill",
+    "search:Tomioka silk mill nishiki-e#2",
+    "search:Tomioka seishijo woodblock print#1"
+   ]
+  },
+  {
+   "id": "1886-de",
+   "c": [
+    "en:Benz_Patent-Motorwagen",
+    "search:Benz Patent-Motorwagen 1886#2"
+   ]
+  },
+  {
+   "id": "1886-us",
+   "c": [
+    "en:Assembly_line",
+    "search:Ford assembly line 1913#2",
+    "en:Ford_Model_T"
+   ]
+  },
+  {
+   "id": "1919-jp",
+   "c": [
+    "en:Rice_riots_of_1918",
+    "ja:米騒動",
+    "search:Rice riots 1918 Japan#2"
+   ]
+  },
+  {
+   "id": "1919-de",
+   "c": [
+    "en:Women's_suffrage_in_Germany",
+    "de:Frauenwahlrecht",
+    "search:Frauenwahlrecht Plakat 1919#2",
+    "search:Nationalversammlung 1919 weibliche Abgeordnete#1"
+   ]
+  },
+  {
+   "id": "1919-us",
+   "c": [
+    "en:Nineteenth_Amendment_to_the_United_States_Constitution",
+    "search:suffragists 1920 photograph#2",
+    "en:Women's_suffrage_in_the_United_States"
+   ]
+  },
+  {
+   "id": "1949-jp",
+   "c": [
+    "en:Constitution_of_Japan",
+    "ja:日本国憲法",
+    "search:Constitution of Japan promulgation 1946#2"
+   ]
+  },
+  {
+   "id": "1949-de",
+   "c": [
+    "en:Berlin_Blockade",
+    "search:Berlin airlift Tempelhof 1948 photograph#2",
+    "en:Basic_Law_for_the_Federal_Republic_of_Germany"
+   ]
+  },
+  {
+   "id": "1949-us",
+   "c": [
+    "en:Levittown,_New_York",
+    "en:Mid-20th_century_baby_boom",
+    "search:Levittown 1950s aerial#2"
+   ]
+  },
+  {
+   "id": "1963-us",
+   "c": [
+    "en:March_on_Washington_for_Jobs_and_Freedom",
+    "en:I_Have_a_Dream",
+    "search:Martin Luther King March on Washington 1963#2"
+   ]
+  },
+  {
+   "id": "1963-jp",
+   "c": [
+    "en:Tokyo_Tower",
+    "en:Instant_noodle",
+    "search:Tokyo Tower 1959#2",
+    "search:Chicken Ramen Nissin 1958#1"
+   ]
+  },
+  {
+   "id": "1963-de",
+   "c": [
+    "en:Berlin_Wall",
+    "search:Berlin Wall construction 1961#3"
+   ]
+  },
+  {
+   "id": "2001-jp",
+   "c": [
+    "en:Great_Hanshin_earthquake",
+    "search:Great Hanshin earthquake Kobe 1995#3"
+   ]
+  },
+  {
+   "id": "2001-us",
+   "c": [
+    "en:Tribute_in_Light",
+    "search:Tribute in Light Manhattan#2",
+    "en:September_11_attacks"
+   ]
+  },
+  {
+   "id": "2001-de",
+   "c": [
+    "en:Euro_banknotes",
+    "en:Euro_coins",
+    "search:Euro banknotes 2002#1"
+   ]
+  },
+  {
+   "id": "2020-jp",
+   "c": [
+    "en:Japan_National_Stadium",
+    "en:2020_Summer_Olympics",
+    "search:Tokyo 2020 Olympics empty stands#1"
+   ]
+  },
+  {
+   "id": "2020-us",
+   "c": [
+    "en:COVID-19_pandemic_in_the_United_States",
+    "search:COVID-19 Times Square empty 2020#1",
+    "search:SARS-CoV-2 CDC illustration#1"
+   ]
+  },
+  {
+   "id": "2020-de",
+   "c": [
+    "en:BioNTech",
+    "en:Pfizer–BioNTech_COVID-19_vaccine",
+    "search:BioNTech Mainz#1"
    ]
   }
  ],
