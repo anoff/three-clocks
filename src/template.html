@@ -164,6 +164,7 @@ body {
 .title-card .text-btn { border: 0; background: none; padding: 4px 0; color: var(--muted); font: 700 15px/1 var(--f-body); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .title-card .text-btn:focus-visible { outline: 3px solid var(--us); outline-offset: 2px; }
 .end-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.fxcanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .link { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .link path { fill: none; stroke: #fff; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
 .link #linkShade { stroke: rgba(0, 0, 0, .42); stroke-width: 8; }
@@ -376,6 +377,8 @@ html:lang(ja) .stage.portrait .end-card h2 { font-size: 84px; }
         </div>
       </div>
 
+      <canvas class="fxcanvas" id="fxCanvas" aria-hidden="true"></canvas>
+
       <div class="overlay title-card" id="titleCard">
         <div class="faces" aria-hidden="true">
           <div class="face jp" style="--ha: -40deg; --ma: 70deg; --sp: 7s"><i class="h"></i><i class="m"></i></div>
@@ -512,9 +515,14 @@ const Sound = (() => {
     while (nextTime < ahead) { playStep(step, nextTime); nextTime += 60 / bpm / 4; step = (step + 1) % 64; }
   }
   function fade(bus, to, secs) { const t = ctx.currentTime; bus.gain.cancelScheduledValues(t); bus.gain.setValueAtTime(bus.gain.value, t); bus.gain.linearRampToValueAtTime(to, t + secs); }
-  return {
-    start() { if (!init()) return; if (ctx.state !== 'running') ctx.resume(); if (!timer) timer = setInterval(schedule, 25); },
-    pause() { if (ctx && ctx.state === 'running') ctx.suspend(); },
+  const api = {
+    // the soundtrack keeps running while the film is paused; it only needs one user gesture to start
+    start() {
+      const fresh = !ctx; if (!init()) return;
+      if (ctx.state !== 'running') ctx.resume();
+      if (!timer) timer = setInterval(schedule, 25);
+      if (fresh) { const m = mood; mood = 'off'; api.setMood(m); }
+    },
     setEnabled(on) { enabled = on; if (ctx) fade(master, on ? .55 : 0, .15); },
     setSpeed(x) { bpm = 112 * (1 + (x - 1) * .5); },
     setMood(m) {
@@ -538,6 +546,13 @@ const Sound = (() => {
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(1.6, t + .15); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
       s.connect(f); f.connect(g); g.connect(sfx); s.start(t); s.stop(t + dur + .05);
     },
+    heartbeat(beats = 3) {
+      if (!ctx) return;
+      for (let i = 0; i < beats; i++) [0, .24].forEach((d, j) => {
+        const t = ctx.currentTime + .02 + i * .82 + d;
+        const o = osc('sine', 72, t, .24, j ? .55 : .85, sfx); o.frequency.exponentialRampToValueAtTime(40, t + .16);
+      });
+    },
     whoosh(dur = 2.3) {
       if (!ctx) return; const t = ctx.currentTime + .01;
       const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
@@ -547,6 +562,7 @@ const Sound = (() => {
       s.connect(f); f.connect(g); g.connect(sfx); s.start(t); s.stop(t + dur + .05);
     },
   };
+  return api;
 })();
 
 (() => {
@@ -555,7 +571,7 @@ const Sound = (() => {
   const REGIONS = ['jp', 'us', 'de'];
   const LANGS = Object.keys(I18N);
   const Y0 = 1026, Y1 = 2026, SPAN = Y1 - Y0;
-  const SCENE_DUR = 6.6, TITLE_DUR = 4.6, END_DUR = 6;
+  const SCENE_DUR = 8.6, TITLE_DUR = 4.6, END_DUR = 6;
   const DIMS = { land: { w: 1280, h: 720 }, port: { w: 720, h: 1280 } };
   const JA_FONT = 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;700;800;900&display=swap';
 
@@ -930,12 +946,13 @@ const Sound = (() => {
   function cues(i, tau) {
     const seg = SEGS[i];
     const crossed = at => playing && i === prevSeg && prevTau < at && tau >= at;
-    Sound.setMood(!playing ? 'off' : seg.type === 'title' ? 'intro' : seg.type === 'end' ? 'end' : SCENES[seg.k].fx === 'dark' ? 'dark' : 'groove');
+    Sound.setMood(seg.type === 'title' ? 'intro' : seg.type === 'end' ? 'end' : SCENES[seg.k].fx === 'dark' ? 'dark' : 'groove');
     if (seg.type === 'title' && crossed(1.5)) Sound.whoosh(2.3);
     if (seg.type === 'scene') {
       const s = SCENES[seg.k];
       if (s.stamp && crossed(3.15)) Sound.stampHit();
       if (s.fx === 'shake' && crossed(.35)) Sound.rumble(1.8);
+      if (s.fx === 'virus' && crossed(.35)) Sound.heartbeat(3);
     }
     prevSeg = i; prevTau = tau;
   }
@@ -948,7 +965,7 @@ const Sound = (() => {
     cues(i, tau);
 
     let v = Y1, lane = { jp: [0, 0], us: [0, 0], de: [0, 0] }, capO = 0, capY = 0, rangeO = 1, linkP = 0, stampS = 0, stampO = 0;
-    let dark = 0, sx = 0, sy = 0, titleO = 0, titleY = 0, endO = 0;
+    let dark = 0, sx = 0, sy = 0, titleO = 0, titleY = 0, endO = 0, virus = 0, beat = 0;
 
     if (seg.type === 'title') {
       titleO = 1 - easeInOut(clamp((tau - 1.0) / .7));
@@ -977,6 +994,11 @@ const Sound = (() => {
       linkP = s.link ? easeOut(clamp((tau - 2.7) / .55)) * (1 - exit) : 0;
       if (s.stamp) { const k = clamp((tau - 3.15) / .32); stampS = RM ? 1 : (k > 0 ? 1.7 - .7 * easeBack(k) : 1.7); stampO = (k > 0 ? Math.min(1, k * 3) : 0) * (1 - exit); }
       if (s.fx === 'dark') dark = clamp(tau / .9) * (1 - clamp((tau - (D - .7)) / .7));
+      if (s.fx === 'virus' && MOVE) {
+        // particles drift in for about 3.5 s while the frame throbs like a heartbeat
+        virus = clamp((tau - .3) / .6) * (1 - clamp((tau - 2.9) / 1.1));
+        if (tau > .35 && tau < 2.8) beat = Math.pow(Math.max(0, Math.sin((tau - .35) * Math.PI / .82)), 12);
+      }
       if (s.fx === 'shake' && MOVE && tau > .35 && tau < 2.1) {
         const a = 9 * (1 - (tau - .35) / 1.75); sx = a * Math.sin(tau * 57); sy = a * .6 * Math.cos(tau * 43);
       }
@@ -1014,7 +1036,8 @@ const Sound = (() => {
     stamp.style.opacity = stampO.toFixed(3);
     stamp.style.transform = `${sRot}rotate(-7deg) scale(${stampS.toFixed(3)})`;
     stage.style.setProperty('--d', dark.toFixed(3));
-    shaker.style.transform = (sx || sy) ? `translate(${sx.toFixed(1)}px, ${sy.toFixed(1)}px)` : '';
+    shaker.style.transform = (sx || sy) ? `translate(${sx.toFixed(1)}px, ${sy.toFixed(1)}px)` : beat ? `scale(${(1 + .012 * beat).toFixed(4)})` : '';
+    drawVirus(virus, tau);
     titleCard.style.opacity = titleO.toFixed(3);
     titleCard.style.transform = `translateY(${titleY.toFixed(1)}px)`;
     titleCard.style.visibility = titleO > .002 ? 'visible' : 'hidden';
@@ -1027,6 +1050,42 @@ const Sound = (() => {
     // controls
     if (!dragging) scrub.value = Math.round(t / TOTAL * 1000);
     clock.textContent = `${fmt(t)} / ${fmt(TOTAL)}`;
+  }
+
+  // ---- virus effect (COVID scene): spiky particles on a canvas, positions derived from time so seeking works ----
+  const fxCanvas = $('fxCanvas'), fx2 = fxCanvas.getContext('2d');
+  let fxDirty = false;
+  const PARTICLES = Array.from({ length: 26 }, (_, n) => {
+    const r = q => { const x = Math.sin(n * 12.9898 + q * 78.233) * 43758.5453; return x - Math.floor(x); };
+    return { x: r(1), y: r(2), size: 14 + r(3) * 30, vx: (r(4) - .5) * .05, vy: -.02 - r(5) * .05, spin: (r(6) - .5) * 1.4, ph: r(7) * 6.28 };
+  });
+  function virusShape(c, x, y, rad, rot, alpha) {
+    c.save(); c.translate(x, y); c.rotate(rot); c.globalAlpha = alpha;
+    c.strokeStyle = '#c23a25'; c.lineWidth = rad * .13; c.lineCap = 'round'; c.fillStyle = '#ef7a5e';
+    for (let k = 0; k < 12; k++) {
+      const a = k / 12 * Math.PI * 2, ca = Math.cos(a), sa = Math.sin(a);
+      c.beginPath(); c.moveTo(ca * rad * .85, sa * rad * .85); c.lineTo(ca * rad * 1.32, sa * rad * 1.32); c.stroke();
+      c.beginPath(); c.arc(ca * rad * 1.4, sa * rad * 1.4, rad * .17, 0, Math.PI * 2); c.fill();
+    }
+    const g = c.createRadialGradient(-rad * .35, -rad * .35, rad * .1, 0, 0, rad);
+    g.addColorStop(0, '#ffd9cc'); g.addColorStop(.55, '#e2563d'); g.addColorStop(1, '#8d1f12');
+    c.beginPath(); c.arc(0, 0, rad, 0, Math.PI * 2); c.fillStyle = g; c.fill();
+    c.fillStyle = 'rgba(255,214,200,.55)';
+    for (let k = 0; k < 5; k++) { const a = k * 2.4 + .5; c.beginPath(); c.arc(Math.cos(a) * rad * .5, Math.sin(a) * rad * .5, rad * .1, 0, Math.PI * 2); c.fill(); }
+    c.restore();
+  }
+  function drawVirus(level, tau) {
+    if (level <= 0) { if (fxDirty) { fx2.clearRect(0, 0, fxCanvas.width, fxCanvas.height); fxDirty = false; } return; }
+    const W = fxCanvas.width, H = fxCanvas.height, k = W / stage.offsetWidth;
+    fx2.clearRect(0, 0, W, H); fxDirty = true;
+    const vg = fx2.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .35, W / 2, H / 2, Math.max(W, H) * .75);
+    vg.addColorStop(0, 'rgba(160,20,10,0)'); vg.addColorStop(1, `rgba(160,20,10,${(.32 * level).toFixed(3)})`);
+    fx2.fillStyle = vg; fx2.fillRect(0, 0, W, H);
+    PARTICLES.forEach(p => {
+      const x = ((p.x + p.vx * tau + Math.sin(tau * .9 + p.ph) * .015) % 1 + 1) % 1 * W;
+      const y = ((p.y + p.vy * tau) % 1 + 1) % 1 * H;
+      virusShape(fx2, x, y, p.size * k * (.85 + .15 * Math.sin(tau * 2 + p.ph)), p.ph + tau * p.spin, .78 * level);
+    });
   }
 
   // ---- playback ----
@@ -1050,7 +1109,7 @@ const Sound = (() => {
   function setPlaying(p) {
     if (p && t >= TOTAL - .01) t = 0;
     playing = p; lastNow = null; dirty = true;
-    if (p) Sound.start(); else Sound.pause();
+    if (p) Sound.start();
     updatePlayButton();
   }
   function frame(now) {
@@ -1142,6 +1201,7 @@ const Sound = (() => {
       orient = o;
       stage.classList.toggle('portrait', o === 'port');
       stage.style.width = w + 'px'; stage.style.height = h + 'px';
+      fxCanvas.width = Math.round(w * 1.5); fxCanvas.height = Math.round(h * 1.5); fxDirty = true;
       buildMap(o === 'port' ? w - 48 - 102 : w - 56 - 94, o === 'port' ? 12 : 10.5);
       REGIONS.forEach(r => eraIdx[r] = -1);
       curContent = null;

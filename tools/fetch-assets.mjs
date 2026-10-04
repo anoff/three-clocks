@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 const out = process.argv[2] || 'out';
 const manifest = JSON.parse(readFileSync(new URL('./assets-manifest.json', import.meta.url), 'utf8'));
 const only = process.argv[3] ? new Set(process.argv[3].split(',')) : null; // optional: comma-separated ids
-const UA = 'three-timelines/1.0 (https://github.com/anoff/three-timelines; build-time asset fetcher)';
+const UA = 'three-clocks/1.0 (https://github.com/anoff/three-clocks; build-time asset fetcher)';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function get(url, as = 'json') {

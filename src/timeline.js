@@ -1,47 +1,48 @@
 // Three Clocks — timeline structure (language-independent).
 // Every scene is keyed by its year; the text for each language lives in src/i18n/<lang>.js under the same year.
 //   year  : where the rolling counter stops
-//   order : which lanes slide in first (default jp, us, de)
+//   Lanes always enter top to bottom (Japan, America, Germany), so the upper lane introduces a
+//   person or event and lower lanes may refer back to it, never the other way round.
 //   link  : lanes joined by a bracket ("these happened together")
 //   stamp : true when the scene gets a rubber stamp (its text is translated)
-//   fx    : "shake" (earthquakes) or "dark" (World War II)
-//   dur   : seconds on screen at 1× (default 6.6)
+//   fx    : "shake" (earthquakes), "dark" (World War II) or "virus" (COVID)
+//   dur   : seconds on screen at 1× (default 8.6)
 //   art   : line-art fallback per lane, by name from src/art.js
 //   media : map or chart per lane ("map:<name>" from src/maps.js, "chart:<name>" from src/charts.js);
 //           every other lane shows its photo/painting from assets/img/<year>-<lane>.jpg when src/media.js lists one
 const SCENES = [
   { year: 1027, art: { jp: "scroll", us: "mound", de: "crown" } },
-  { year: 1077, order: ["de", "jp", "us"], art: { us: "cliff", de: "snowfort" } },
+  { year: 1077, art: { us: "cliff", de: "snowfort" } },
   { year: 1185, art: { jp: "kabuto", us: "cliff", de: "drown" } },
-  { year: 1241, order: ["de", "jp", "us"], link: ["jp", "de"], stamp: true, art: { jp: "storm", us: "cliff", de: "bow" } },
-  { year: 1348, order: ["de", "jp", "us"], art: { de: "skull" } },
-  { year: 1455, order: ["de", "jp", "us"], art: { jp: "fire", us: "longhouse", de: "press" } },
-  { year: 1492, order: ["us", "de", "jp"], link: ["us", "de"], stamp: true, art: { jp: "temple", us: "caravel", de: "globe" }, media: { us: "map:columbus" } },
-  { year: 1521, order: ["de", "us", "jp"], link: ["us", "de"], stamp: true, art: { jp: "goldpan", us: "temple", de: "book" } },
+  { year: 1241, link: ["jp", "de"], stamp: true, art: { jp: "storm", us: "cliff", de: "bow" } },
+  { year: 1348, art: { de: "skull" } },
+  { year: 1455, art: { jp: "fire", us: "longhouse", de: "press" } },
+  { year: 1492, link: ["us", "de"], stamp: true, art: { jp: "temple", us: "caravel", de: "globe" }, media: { us: "map:columbus" } },
+  { year: 1521, link: ["us", "de"], stamp: true, art: { jp: "goldpan", us: "temple", de: "book" } },
   { year: 1543, link: ["jp", "de"], stamp: true, art: { jp: "musket", us: "compass", de: "orbit" }, media: { us: "map:explorers" } },
-  { year: 1555, order: ["jp", "de", "us"], art: { jp: "scroll", us: "fort", de: "scales" } },
+  { year: 1555, art: { jp: "scroll", us: "fort", de: "scales" } },
   { year: 1590, art: { jp: "castle", us: "house", de: "scroll" } },
   { year: 1600, art: { jp: "banners", us: "fort", de: "press" } },
   { year: 1618, art: { jp: "lock", us: "caravel", de: "swords" } },
-  { year: 1683, order: ["us", "de", "jp"], art: { jp: "fan", us: "fire", de: "shield" } },
-  { year: 1701, order: ["de", "jp", "us"], art: { jp: "katana", us: "corn", de: "crown" } },
+  { year: 1683, art: { jp: "fan", us: "fire", de: "shield" } },
+  { year: 1701, art: { jp: "katana", us: "corn", de: "crown" } },
   { year: 1776, art: { jp: "anatomy", us: "scroll", de: "heart" } },
-  { year: 1806, order: ["de", "us", "jp"], art: { jp: "wave", us: "map", de: "ruin" }, media: { us: "map:louisiana" } },
-  { year: 1848, order: ["de", "us", "jp"], art: { jp: "steamship", us: "goldpan", de: "flag" } },
-  { year: 1868, order: ["us", "jp", "de"], link: ["jp", "us", "de"], stamp: true, art: { jp: "sunrise", us: "cannon", de: "pickelhaube" } },
-  { year: 1877, order: ["jp", "us", "de"], art: { jp: "katana", us: "train", de: "shield" } },
-  { year: 1886, order: ["jp", "de", "us"], art: { jp: "scroll", us: "train", de: "beetle" } },
-  { year: 1905, order: ["us", "jp", "de"], link: ["jp", "de"], stamp: true, art: { jp: "warship", us: "kite", de: "atom" } },
-  { year: 1919, order: ["de", "us", "jp"], stamp: true, art: { jp: "fire", us: "flag", de: "scroll" } },
+  { year: 1806, art: { jp: "wave", us: "map", de: "ruin" }, media: { us: "map:louisiana" } },
+  { year: 1848, art: { jp: "steamship", us: "goldpan", de: "flag" } },
+  { year: 1868, link: ["jp", "us", "de"], stamp: true, art: { jp: "sunrise", us: "cannon", de: "pickelhaube" } },
+  { year: 1877, art: { jp: "katana", us: "train", de: "shield" } },
+  { year: 1886, art: { jp: "scroll", us: "train", de: "beetle" } },
+  { year: 1905, link: ["jp", "de"], stamp: true, art: { jp: "warship", us: "kite", de: "atom" } },
+  { year: 1919, stamp: true, art: { jp: "fire", us: "flag", de: "scroll" } },
   { year: 1923, fx: "shake", stamp: true, art: { jp: "crack", us: "skyscraper", de: "wheelbarrow" } },
-  { year: 1941, order: ["de", "jp", "us"], fx: "dark", dur: 9 },
-  { year: 1949, order: ["jp", "de", "us"], art: { jp: "scroll", us: "house", de: "dove" } },
-  { year: 1963, order: ["jp", "de", "us"], art: { jp: "skyscraper", us: "dove", de: "wall" } },
-  { year: 1964, order: ["jp", "de", "us"], link: ["jp", "us"], stamp: true, art: { jp: "shinkansen", us: "moon", de: "beetle" } },
-  { year: 1989, order: ["de", "jp", "us"], link: ["jp", "de"], stamp: true, art: { jp: "bubble", de: "wall" }, media: { jp: "chart:nikkei" } },
-  { year: 2001, order: ["jp", "us", "de"], art: { jp: "crack", us: "skyscraper", de: "chart" } },
-  { year: 2011, order: ["jp", "us", "de"], fx: "shake", art: { jp: "wave", us: "flag", de: "heart" } },
-  { year: 2020, link: ["jp", "us", "de"], stamp: true, art: { jp: "blossom", us: "aid", de: "atom" } },
+  { year: 1941, fx: "dark", dur: 11.7 },
+  { year: 1949, art: { jp: "scroll", us: "house", de: "dove" } },
+  { year: 1963, art: { jp: "skyscraper", us: "dove", de: "wall" } },
+  { year: 1964, link: ["jp", "us"], stamp: true, art: { jp: "shinkansen", us: "moon", de: "beetle" } },
+  { year: 1989, link: ["jp", "de"], stamp: true, art: { jp: "bubble", de: "wall" }, media: { jp: "chart:nikkei" } },
+  { year: 2001, art: { jp: "crack", us: "skyscraper", de: "chart" } },
+  { year: 2011, fx: "shake", art: { jp: "wave", us: "flag", de: "heart" } },
+  { year: 2020, link: ["jp", "us", "de"], stamp: true, fx: "virus", art: { jp: "blossom", us: "aid", de: "atom" } },
   { year: 2026, art: { jp: "blossom", us: "fireworks", de: "chart" }, media: { de: "chart:gdp" } },
 ];
 

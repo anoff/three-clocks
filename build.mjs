@@ -20,7 +20,7 @@ const fragment = read('src/template.html')
   .replace('__KANJI_FONT__', kanjiFont);
 
 const split = fragment.indexOf('<div class="app"');
-const description = 'A four-minute animated film: 1,000 years of Japan, America and Germany side by side. English, Deutsch, 日本語.';
+const description = 'A five-minute animated film: 1,000 years of Japan, America and Germany side by side. English, Deutsch, 日本語.';
 const page = `<!doctype html>
 <html lang="en">
 <head>
