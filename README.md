@@ -1,12 +1,12 @@
 # Three Clocks, One Millennium
 
-A three-minute animated film that runs the last 1,000 years of **Japan**, **America** and **Germany & Europe** side by side, so you can see what was happening in each place at the same moment.
+A four-minute animated film that runs the last 1,000 years of **Japan**, **America** and **Germany & Europe** side by side, so you can see what was happening in each place at the same moment.
 
 **Watch it:** https://anoff.github.io/three-timelines/ (add `#de` or `#ja` to open it in German or Japanese)
 
-- A rolling year counter spins from 1027 to 2026 across 26 fast scenes.
+- A rolling year counter spins from 1027 to 2026 across 33 fast scenes, each showing what was happening in all three places at that moment.
 - Three lanes show each country's story at that moment; stamps and brackets mark the "same year, same emperor, same enemy" coincidences.
-- **Real images for every event:** 69 period paintings, woodblock prints, portraits and historical photos from Wikimedia Commons (the Genji scroll, the Mongol invasion scroll, Luther at Worms, Hokusai's Great Wave, Einstein, Apollo 11 …) with a slow documentary-style pan and zoom and a credit line on each.
+- **Real images for every event:** 91 period paintings, woodblock prints, portraits and historical photos from Wikimedia Commons (the Genji scroll, the Mongol invasion scroll, Luther at Worms, Hokusai's Great Wave, Einstein, Apollo 11 …) with a slow documentary-style pan and zoom and a credit line on each.
 - **Animated maps** for Columbus' voyage, the Spanish expeditions, Krefeld → Germantown and the Louisiana Purchase, plus gradient charts for the Nikkei bubble and the 2023 GDP ranking.
 - A full credits screen (title card and end card) and [CREDITS.md](CREDITS.md) list every image with author and license.
 - The era map at the bottom shows how Heian, the Holy Roman Empire, the Edo period, the American colonies and the rest overlap. Click any year to jump there.

@@ -23,12 +23,6 @@ const SPECS = {
     ],
     pins: [{ at: [-82.6, 27.7], kind: 'origin' }, { at: [-107.4, 24.8], kind: 'origin' }, { at: [-91.5, 31.4] }, { at: [-98.2, 38.3] }],
   },
-  // 1683: Krefeld → Rotterdam → London → Philadelphia
-  krefeld: {
-    bbox: [-122, 30, 14, 58], highlight: ['276', '840'],
-    routes: [[[6.56, 51.33], [4.48, 51.92], [1.3, 51.3], [-5, 49.6], [-18, 47.4], [-36, 45.2], [-55, 42.6], [-68, 40.6], [-75.16, 39.95]]],
-    pins: [{ at: [6.56, 51.33], kind: 'origin' }, { at: [-75.16, 39.95] }],
-  },
   // 1803: the Louisiana Purchase, approximate outline
   louisiana: {
     bbox: [-150, 24, -45, 50], highlight: ['840'],

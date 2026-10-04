@@ -754,7 +754,15 @@ const Sound = (() => {
     caption.textContent = tx.caption;
     range.textContent = tx.range;
     stamp.textContent = s.stamp ? (tx.stamp || '') : '';
+    fitCaption();
     drawLink(s.link);
+  }
+  // keep the caption clear of the rubber stamp (landscape only; on phones the caption sits on its own row)
+  function fitCaption() {
+    if (stage.classList.contains('portrait') || !stamp.textContent) { caption.style.maxWidth = ''; return; }
+    const head = caption.parentNode, clockW = head.querySelector('.clock').offsetWidth;
+    const free = head.offsetWidth - clockW - 34 - stamp.offsetWidth - 36;
+    caption.style.maxWidth = Math.max(300, Math.min(620, free)) + 'px';
   }
   // illustrations: every stroke gets pathLength=1 so one dash offset can draw it in
   function setArt(r, name) {

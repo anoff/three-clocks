@@ -1,13 +1,14 @@
 """Turns the chosen Commons candidates into web images + credits.
-Usage: python3 tools/process-images.py <round1-dir> [<round2-dir>]
+Usage: python3 tools/process-images.py <round1-dir> [<round2-dir> ...]
 Writes assets/img/<id>.jpg (max 800x600, progressive JPEG) and src/media.js (credits + subject centre)."""
 import json, sys, re, os
 from PIL import Image
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 picks = {k: v for k, v in json.load(open(os.path.join(root, 'tools/image-picks.json'))).items() if not k.startswith('_')}
-rounds = {1: sys.argv[1]}
-if len(sys.argv) > 2: rounds[2] = sys.argv[2]
+rounds = {i + 1: d for i, d in enumerate(sys.argv[1:])}
 index = {r: {(e['id'], e['n']): e for e in json.load(open(os.path.join(d, 'index.json')))} for r, d in rounds.items()}
+needed = {p.get('round', 1) for p in picks.values()}
+assert needed <= set(rounds), f'missing candidate dirs for rounds {needed - set(rounds)}'
 
 def tidy_artist(a):
     a = re.sub(r'\s+', ' ', a or '').strip()
